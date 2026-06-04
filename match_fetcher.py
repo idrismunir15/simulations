@@ -266,12 +266,7 @@ def fetch_and_store_matches(config: dict) -> list[dict]:
     conn = init_db(db_path)
     for match in matches:
         upsert_match(conn, match)
-        logger.debug(
-            "Stored: %s vs %s on %s",
-            match["home_team"],
-            match["away_team"],
-            match["match_date"],
-        )
+        logger.debug("Stored match id=%s on %s", match["id"], match["match_date"])
     conn.close()
     return matches
 

@@ -30,8 +30,13 @@ logger = logging.getLogger(__name__)
 # Data structures
 # ---------------------------------------------------------------------------
 
-@dataclass
-class Moment:
+def _make_match_slug(match: dict) -> str:
+    """Return a filesystem-safe slug for a match."""
+    raw = f"{match['home_team']}_vs_{match['away_team']}_{match['match_date']}"
+    return re.sub(r"[^a-zA-Z0-9_-]", "_", raw)
+
+
+
     timestamp: float          # seconds from start of video
     duration: float           # clip duration in seconds
     clip_path: str            # path to the extracted clip file
@@ -223,7 +228,7 @@ def extract_moments(
     all_ts = all_ts[:max_moments]
 
     moments: list[Moment] = []
-    match_slug = re.sub(r"[^a-zA-Z0-9_-]", "_", f"{match['home_team']}_vs_{match['away_team']}_{match['match_date']}")
+    match_slug = _make_match_slug(match)
 
     for idx, ts in enumerate(all_ts):
         method = next((m for t, m in tagged if abs(t - ts) < 1.0), "scene")
@@ -284,10 +289,7 @@ def extract_all_moments(config: dict) -> dict[str, list[Moment]]:
             )
             continue
 
-        match_moments_dir = os.path.join(
-            moments_dir,
-            re.sub(r"[^a-zA-Z0-9_-]", "_", f"{match['home_team']}_vs_{match['away_team']}_{match['match_date']}"),
-        )
+        match_moments_dir = os.path.join(moments_dir, _make_match_slug(match))
         moments = extract_moments(
             video_path=video_path,
             output_dir=match_moments_dir,

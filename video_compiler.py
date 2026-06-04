@@ -68,9 +68,12 @@ def _generate_title_card(
         f"drawtext=text='{_esc(text_line2)}':fontcolor=yellow:fontsize=36:"
         f"x=(w-text_w)/2:y=(h-text_h)/2+30:font='Liberation Sans'"
     )
+    # Add a silent audio stream so title card clips can be concatenated
+    # with audio-bearing clips without format mismatch.
     cmd = [
         "ffmpeg", "-y",
         "-f", "lavfi", "-i", vf,
+        "-f", "lavfi", "-i", f"anullsrc=r=44100:cl=stereo",
         "-r", str(fps),
         "-c:v", "libx264", "-preset", "fast", "-crf", "23",
         "-c:a", "aac", "-ar", "44100", "-ac", "2",

@@ -139,7 +139,7 @@ def _get_youtube_service(config: dict):
     yt_cfg = config["youtube"]
     scopes = ["https://www.googleapis.com/auth/youtube.upload"]
     token_file = yt_cfg.get("token_file", "youtube_token.json")
-    client_secrets = yt_cfg.get("client_secrets_file", "client_secrets.json")
+    oauth_file = yt_cfg.get("client_secrets_file", "client_secrets.json")
 
     creds = None
     if os.path.exists(token_file):
@@ -148,17 +148,16 @@ def _get_youtube_service(config: dict):
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            if not os.path.exists(client_secrets):
+            if not os.path.exists(oauth_file):
                 logger.error(
-                    "YouTube client secrets file not found: %s", client_secrets
+                    "YouTube OAuth credentials file not found: %s", oauth_file
                 )
                 return None
-            flow = InstalledAppFlow.from_client_secrets_file(client_secrets, scopes)
+            flow = InstalledAppFlow.from_client_secrets_file(oauth_file, scopes)
             creds = flow.run_local_server(port=0)
         with open(token_file, "w") as token:
             token.write(creds.to_json())
 
-    from googleapiclient.discovery import build
     return build("youtube", "v3", credentials=creds)
 
 
