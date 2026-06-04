@@ -1,0 +1,20 @@
+# Core
+requests>=2.31.0
+pyyaml>=6.0.1
+
+# Video downloading
+yt-dlp>=2024.1.1
+
+# Video processing (FFmpeg Python bindings — ffmpeg binary must also be installed)
+ffmpeg-python>=0.2.0
+
+# Twitter / X upload
+tweepy>=4.14.0
+
+# YouTube Data API v3
+google-api-python-client>=2.111.0
+google-auth-oauthlib>=1.2.0
+google-auth-httplib2>=0.2.0
+
+# Optional: background scheduler
+apscheduler>=3.10.4

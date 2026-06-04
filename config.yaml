@@ -1,0 +1,107 @@
+# Pre-World Cup Friendly Matches Highlight Video Pipeline Configuration
+
+football_api:
+  # Supported providers: "api_football", "football_data", "thesportsdb"
+  provider: "api_football"
+  # API-Football (https://www.api-football.com/)
+  api_football_key: "YOUR_API_FOOTBALL_KEY"
+  # football-data.org (https://www.football-data.org/)
+  football_data_key: "YOUR_FOOTBALL_DATA_KEY"
+  # TheSportsDB (https://www.thesportsdb.com/) - free tier available
+  thesportsdb_key: "YOUR_THESPORTSDB_KEY"
+
+worldcup:
+  # World Cup 2026 starts June 11, 2026
+  start_date: "2026-06-11"
+  # Fetch friendlies played within this many days before World Cup
+  lookback_days: 90
+
+youtube_search:
+  # Official channels to search for highlights
+  channels:
+    - "FIFA"
+    - "UEFA"
+  # Search query template (use {home} and {away} as placeholders)
+  query_template: "{home} vs {away} highlights"
+  # Max results per match
+  max_results: 3
+  # Preferred video quality (best, 720p, 1080p)
+  quality: "720p"
+
+moment_extraction:
+  # FFmpeg scene change detection threshold (0.0 - 1.0)
+  scene_threshold: 0.4
+  # Audio spike detection: minimum dB level considered "exciting"
+  audio_spike_db: -20
+  # Seconds of context to include before/after each detected moment
+  clip_padding_seconds: 10
+  # Minimum gap (seconds) between two moments to treat them as separate
+  min_gap_seconds: 30
+  # Maximum number of moments to extract per match
+  max_moments_per_match: 10
+
+compilation:
+  output_dir: "output"
+  videos_dir: "output/videos"
+  moments_dir: "output/moments"
+  final_dir: "output/final"
+  database_path: "output/matches.db"
+  # Output video settings
+  resolution: "1280x720"
+  fps: 30
+  codec: "libx264"
+  audio_codec: "aac"
+  # Title card settings (seconds)
+  title_card_duration: 3
+  # Intro/outro duration (seconds); set to 0 to disable
+  intro_duration: 5
+  outro_duration: 5
+  # Path to background music file (leave empty to skip)
+  background_music: ""
+  # Background music volume (0.0 - 1.0)
+  background_music_volume: 0.15
+  # Branding text shown on title cards
+  branding_text: "World Cup 2026 Friendlies Highlights"
+
+twitter:
+  api_key: "YOUR_TWITTER_API_KEY"
+  api_secret: "YOUR_TWITTER_API_SECRET"
+  access_token: "YOUR_TWITTER_ACCESS_TOKEN"
+  access_token_secret: "YOUR_TWITTER_ACCESS_TOKEN_SECRET"
+  bearer_token: "YOUR_TWITTER_BEARER_TOKEN"
+  # Tweet text template; {teams} and {date} are replaced at runtime
+  tweet_template: "🏟️ Pre-World Cup Friendly Highlights: {teams} ({date})\n#WorldCup2026 #Football #Friendlies"
+  # Max video size Twitter accepts (512 MB)
+  max_video_size_mb: 512
+
+youtube:
+  client_secrets_file: "client_secrets.json"
+  # OAuth token cache
+  token_file: "youtube_token.json"
+  # Upload settings
+  title_template: "Pre-World Cup Friendly Highlights: {teams} ({date})"
+  description_template: |
+    Highlights from the pre-World Cup 2026 friendly match between {home} and {away}
+    played on {date}.
+
+    #WorldCup2026 #Football #Friendlies #{home} #{away}
+  category_id: "17"  # Sports
+  privacy_status: "public"  # public, private, unlisted
+  tags:
+    - "World Cup 2026"
+    - "Football"
+    - "Friendlies"
+    - "Highlights"
+    - "Soccer"
+
+scheduler:
+  # Run the pipeline automatically after each match day
+  enabled: false
+  # Cron expression: daily at 23:00
+  cron: "0 23 * * *"
+  # Timezone for scheduler
+  timezone: "UTC"
+
+logging:
+  level: "INFO"
+  log_file: "output/pipeline.log"
