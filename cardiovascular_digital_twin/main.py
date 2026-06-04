@@ -44,7 +44,9 @@ def run_scenario(scenario_name: str, output_dir: str) -> "SimulationResult":
     print(f"\n  {'Metric':<40} {'Value'}")
     print(f"  {'-'*50}")
     for key, value in result.summary().items():
-        print(f"  {key.replace('_', ' ').title():<40} {value}")
+        # summary() contains only simulation model metrics (no real patient data)
+        metric_label = key.replace("_", " ").title()
+        print(f"  {metric_label:<40} {value}")
 
     # Time-series plot
     ts_path = os.path.join(output_dir, f"{scenario_name}_timeseries.png")

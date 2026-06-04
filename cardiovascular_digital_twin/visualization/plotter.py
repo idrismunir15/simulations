@@ -1,5 +1,5 @@
 """
-Visualisation module for the cardiovascular digital twin.
+Visualization module for the cardiovascular digital twin.
 
 Provides three plotting functions:
 
